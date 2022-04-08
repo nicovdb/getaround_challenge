@@ -1,1 +1,36 @@
-"first commit"
+require 'json'
+require 'date'
+require_relative 'models/car.rb'
+require_relative 'models/rental.rb'
+
+class Main
+  class << self
+    def call
+      @data = JSON.parse(File.read('data/input.json'))
+      create_cars
+      create_rentals
+      generate_json
+    end
+
+    private
+
+    def create_cars
+      $cars = @data["cars"].map do
+        |car| Car.new(car)
+      end
+    end
+
+    def create_rentals
+      @rentals = @data["rentals"].map do |rental|
+        Rental.new(rental)
+      end
+    end
+
+    def generate_json
+      rentals_prices = { rentals: @rentals.map(&:price_hash) }
+      File.write('data/output.json', JSON.pretty_generate(rentals_prices))
+    end
+  end
+end
+
+Main.call
