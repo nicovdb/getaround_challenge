@@ -1,5 +1,6 @@
 class Rental
-  attr_reader :id, :car, :start_date, :end_date, :distance, :options
+  attr_reader :id, :car, :start_date, :end_date, :distance
+  attr_accessor :options
 
   def initialize(attr)
     @id = attr['id']
@@ -7,7 +8,7 @@ class Rental
     @start_date = Date.parse(attr['start_date'])
     @end_date = Date.parse(attr['end_date'])
     @distance = attr['distance']
-    @options = $options.select {|option| option.rental_id == attr['id'] }
+    @options = []
   end
 
   def price_per_action_with_options_hash

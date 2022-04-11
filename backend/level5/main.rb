@@ -9,8 +9,9 @@ class Main
     def call
       @data = JSON.parse(File.read('./data/input.json'))
       create_cars
-      create_options
       create_rentals
+      create_options
+      add_options_to_rentals
       generate_json
     end
 
@@ -25,7 +26,15 @@ class Main
     end
 
     def create_options
-      $options = @data["options"].map { |option_attr| Option.new(option_attr) }
+      @options = @data["options"].map { |option_attr| Option.new(option_attr) }
+
+    end
+
+    def add_options_to_rentals
+      @options.each do |option|
+        rental = @rentals.find { |r| r.id == option.rental_id }
+        rental.options << option
+      end
     end
 
     def generate_json
